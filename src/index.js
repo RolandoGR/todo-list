@@ -1,9 +1,5 @@
 import { initialPageLoad } from "./initialPageLoad";
-import { createTask } from "./tasks";
-
-const list = [];
+import { addTask } from "./tasks";
+import { createTask } from "./form";
 
 initialPageLoad();
-
-const btn = document.querySelector(".taskButton");
-btn.addEventListener("click", createTask);

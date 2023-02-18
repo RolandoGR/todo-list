@@ -1,19 +1,25 @@
 const list = [];
 
-export function createTask() {
-  const title = prompt("Please enter your title");
-  const description = prompt("Please enter your description");
+export function addTask(e) {
+  // Check if target element is the desired button
+  if (e.target && e.target.matches("button")) {
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
 
-  console.log(title, description);
+    console.log(title, description);
 
-  list.push(newTask(title, description));
+    list.push(newTask(title, description));
 
-  const showList = console.log("Here's the list: ", list);
+    function showList() {
+      console.log("Here's the list: ", list);
+    }
+    showList();
 
-  return {
-    showList,
-    list,
-  };
+    return {
+      showList,
+      list,
+    };
+  }
 }
 
 export function newTask(title, description, dueDate, priority) {
