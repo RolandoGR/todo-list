@@ -1,10 +1,38 @@
 import { compareAsc, format } from "date-fns";
 
-const list = [];
+function listController() {
+  const list = [];
 
-export function cancelTask() {
-  form.replaceChildren();
+  function showList() {
+    console.log("Here's the list: ", list);
+  }
+
+  function add(item) {
+    list.push(item);
+  }
+
+  function sideBarLoad() {
+    const sidebar = document.querySelector(".sidebar");
+    let i = 0;
+    sidebar.innerHTML = "";
+    list.forEach((element) => {
+      const taskDiv = document.createElement("div");
+      taskDiv.setAttribute("id", `task-${i}`);
+      taskDiv.classList.add("sidebarDiv");
+      taskDiv.textContent = `${element.title}`;
+      sidebar.appendChild(taskDiv);
+      i += 1;
+    });
+  }
+
+  return {
+    showList,
+    add,
+    sideBarLoad,
+  };
 }
+
+const myListController = listController();
 
 export function addTask(e) {
   // Check if target element is the desired button
@@ -22,15 +50,10 @@ export function addTask(e) {
     };
     const dueDate = document.getElementById("date").value;
 
-    list.push(newTask(title, description, priority(), dueDate));
-    function showList() {
-      console.log("Here's the list: ", list);
-    }
-    showList();
-    return {
-      showList,
-      list,
-    };
+    myListController.add(newTask(title, description, priority(), dueDate));
+    myListController.showList();
+    myListController.sideBarLoad();
+    return;
   }
 }
 
