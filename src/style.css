@@ -25,7 +25,8 @@ h1 {
 .sidebarDiv {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 10px;
+  justify-content: left;
   height: 50px;
   border-style: solid;
   font-size: 1vw;

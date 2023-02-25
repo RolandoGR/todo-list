@@ -1,8 +1,18 @@
-import { addTask, cancelTask } from "./tasks";
+import { addTask, addEditTask } from "./tasks";
 import { compareAsc, endOfTomorrow, format } from "date-fns";
+import { myListController } from "./tasks";
+import lightFormat from "date-fns/lightFormat";
+import parseISO from "date-fns/parseISO";
 
-export function createTask() {
-  if (document.querySelector(".form")) {
+export function createTask(key, n) {
+  let editMode = false;
+  const taskIndex = n;
+  if (key === "editMode") {
+    editMode = true;
+    console.log(myListController.list[n], myListController.list[n].description);
+  }
+  console.log(key, editMode);
+  if (document.querySelector(".form") && !editMode) {
     return;
   }
 
@@ -10,16 +20,25 @@ export function createTask() {
   const form = document.createElement("div");
   form.classList.add("form");
 
-  // create a label for the name input
+  // create a label for the title input
   const titleLabel = document.createElement("label");
   titleLabel.setAttribute("for", "title");
-  titleLabel.textContent = "Enter a title:";
+  titleLabel.setAttribute("id", "titleLabel");
 
-  // create the name input
+  if (!editMode) {
+    titleLabel.textContent = "Enter a title:";
+  } else {
+    titleLabel.textContent = "Title:";
+  }
+
+  // create the title input
   const titleInput = document.createElement("input");
   titleInput.setAttribute("type", "text");
   titleInput.setAttribute("id", "title");
   titleInput.setAttribute("name", "title");
+  if (editMode) {
+    titleInput.setAttribute("value", myListController.list[n].title);
+  }
 
   // create a description label for the message textarea
   const descriptionLabel = document.createElement("label");
@@ -30,6 +49,9 @@ export function createTask() {
   const descriptionTextarea = document.createElement("textarea");
   descriptionTextarea.setAttribute("id", "description");
   descriptionTextarea.setAttribute("name", "description");
+  if (editMode) {
+    descriptionTextarea.textContent += myListController.list[n].description;
+  }
 
   // create a label for the priority input
   const priorityLabel = document.createElement("label");
@@ -40,6 +62,11 @@ export function createTask() {
   const priorityInput = document.createElement("input");
   priorityInput.setAttribute("id", "priority");
   priorityInput.type = "checkbox";
+  if (editMode) {
+    if (myListController.list[n].priority === "High priority") {
+      priorityInput.checked = true;
+    }
+  }
 
   // create a label for the date input
   const dateLabel = document.createElement("label");
@@ -51,14 +78,29 @@ export function createTask() {
   dateInput.setAttribute("type", "date");
   dateInput.setAttribute("id", "date");
   dateInput.setAttribute("name", "date");
-  dateInput.setAttribute("value", endOfTomorrow());
 
-  // create the submit button
+  if (editMode) {
+    dateInput.setAttribute(
+      "value",
+      lightFormat(parseISO(myListController.list[n].dueDate), "yyyy-MM-dd")
+    );
+  } else {
+    dateInput.setAttribute("value", lightFormat(endOfTomorrow(), "yyyy-MM-dd"));
+  }
+
+  // create submit button
   const submitButton = document.createElement("button");
-  submitButton.classList.add("addTask");
   submitButton.setAttribute("type", "submit");
-  submitButton.textContent = "+ Add Task";
-  submitButton.addEventListener("click", addTask);
+
+  if (!editMode) {
+    submitButton.classList.add("addTask");
+    submitButton.textContent = "+ Add Task";
+    submitButton.addEventListener("click", addTask);
+  } else {
+    submitButton.classList.add("addEditTask");
+    submitButton.textContent = "Edit task";
+    submitButton.addEventListener("click", addEditTask);
+  }
 
   // create the cancel button
   const cancelButton = document.createElement("button");
@@ -68,6 +110,7 @@ export function createTask() {
   cancelButton.addEventListener("click", function () {
     form.remove();
   });
+
   // add the form elements to the form
   form.appendChild(titleLabel);
   form.appendChild(titleInput);
