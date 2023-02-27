@@ -12,9 +12,17 @@ function listController() {
     list.push(item);
   }
 
+  function edit(index, title, description, priority, dueDate) {
+    list[index].title = title;
+    list[index].description = description;
+    list[index].priority = priority;
+    list[index].dueDate = dueDate;
+  }
+
   return {
     showList,
     add,
+    edit,
     list,
   };
 }
@@ -22,7 +30,6 @@ function listController() {
 export const myListController = listController();
 
 export function addTask(e) {
-  // Check if target element is the desired button
   if (e.target && e.target.matches(".addTask")) {
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
@@ -45,7 +52,9 @@ export function addTask(e) {
 }
 
 export function addEditTask(e) {
-  if (e.target && e.target.matches(".addEditTask")) {
+  if (e.target && e.target.matches(".editTask")) {
+    const taskIndex = e.target.parentNode.getAttribute("dataIndex");
+    console.log(taskIndex);
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
     const priority = function () {
@@ -59,7 +68,7 @@ export function addEditTask(e) {
     };
     const dueDate = document.getElementById("date").value;
 
-    myListController.add(newTask(title, description, priority(), dueDate));
+    myListController.edit(taskIndex, title, description, priority(), dueDate);
     myListController.showList();
     sideBarLoad(myListController.list);
     return;

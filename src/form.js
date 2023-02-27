@@ -4,14 +4,14 @@ import { myListController } from "./tasks";
 import lightFormat from "date-fns/lightFormat";
 import parseISO from "date-fns/parseISO";
 
-export function createTask(key, n) {
+export function createTask(mode, n) {
   let editMode = false;
   const taskIndex = n;
-  if (key === "editMode") {
+  if (mode === "editMode") {
     editMode = true;
-    console.log(myListController.list[n], myListController.list[n].description);
+    console.log(myListController.list[taskIndex], taskIndex);
   }
-  console.log(key, editMode);
+  console.log(mode, editMode);
   if (document.querySelector(".form") && !editMode) {
     return;
   }
@@ -19,6 +19,9 @@ export function createTask(key, n) {
   // create a div element that contains the inputs
   const form = document.createElement("div");
   form.classList.add("form");
+  if (editMode) {
+    form.setAttribute("dataIndex", taskIndex);
+  }
 
   // create a label for the title input
   const titleLabel = document.createElement("label");
@@ -37,7 +40,7 @@ export function createTask(key, n) {
   titleInput.setAttribute("id", "title");
   titleInput.setAttribute("name", "title");
   if (editMode) {
-    titleInput.setAttribute("value", myListController.list[n].title);
+    titleInput.setAttribute("value", myListController.list[taskIndex].title);
   }
 
   // create a description label for the message textarea
@@ -50,7 +53,8 @@ export function createTask(key, n) {
   descriptionTextarea.setAttribute("id", "description");
   descriptionTextarea.setAttribute("name", "description");
   if (editMode) {
-    descriptionTextarea.textContent += myListController.list[n].description;
+    descriptionTextarea.textContent +=
+      myListController.list[taskIndex].description;
   }
 
   // create a label for the priority input
@@ -63,7 +67,7 @@ export function createTask(key, n) {
   priorityInput.setAttribute("id", "priority");
   priorityInput.type = "checkbox";
   if (editMode) {
-    if (myListController.list[n].priority === "High priority") {
+    if (myListController.list[taskIndex].priority === "High priority") {
       priorityInput.checked = true;
     }
   }
@@ -82,7 +86,10 @@ export function createTask(key, n) {
   if (editMode) {
     dateInput.setAttribute(
       "value",
-      lightFormat(parseISO(myListController.list[n].dueDate), "yyyy-MM-dd")
+      lightFormat(
+        parseISO(myListController.list[taskIndex].dueDate),
+        "yyyy-MM-dd"
+      )
     );
   } else {
     dateInput.setAttribute("value", lightFormat(endOfTomorrow(), "yyyy-MM-dd"));
@@ -97,7 +104,7 @@ export function createTask(key, n) {
     submitButton.textContent = "+ Add Task";
     submitButton.addEventListener("click", addTask);
   } else {
-    submitButton.classList.add("addEditTask");
+    submitButton.classList.add("editTask");
     submitButton.textContent = "Edit task";
     submitButton.addEventListener("click", addEditTask);
   }

@@ -66,7 +66,8 @@ h1 {
 }
 
 .addTask,
-.cancelTask {
+.cancelTask,
+.editTask {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,7 +78,8 @@ h1 {
   transition: 0.5s;
 }
 
-.addTask {
+.addTask,
+.editTask {
   background-color: #3c9e61;
 }
 
@@ -89,7 +91,8 @@ h1 {
   background-color: rgb(160, 1, 1);
   cursor: pointer;
 }
-.addTask:hover {
+.addTask:hover,
+.editTask:hover {
   background-color: #318351;
   cursor: pointer;
 }
