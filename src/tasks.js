@@ -2,34 +2,67 @@ import { compareAsc, format } from "date-fns";
 import { sideBarLoad } from "./sidebar";
 
 function listController() {
-  const list = [];
+  const projectList = [
+    {
+      name: "Project One",
+      tasks: [
+        newTask(
+          "Task 1",
+          "Description of Task 1",
+          "High priority",
+          "2023-03-01"
+        ),
+        newTask(
+          "Task 2",
+          "Description of Task 2",
+          "Standard priority",
+          "2023-03-02"
+        ),
+      ],
+    },
+  ];
 
   function showList() {
-    console.log("Here's the list: ", list);
+    console.log("Here's the project list: ", projectList);
   }
 
-  function add(item) {
-    list.push(item);
+  function createProject(name) {
+    const tasks = [];
+    projectList.push({ name, tasks });
   }
 
-  function edit(index, title, description, priority, dueDate) {
-    list[index].title = title;
-    list[index].description = description;
-    list[index].priority = priority;
-    list[index].dueDate = dueDate;
+  function addTask(projectIndex, title, description, priority, dueDate) {
+    projectList[projectIndex].tasks.push(
+      newTask(title, description, priority, dueDate)
+    );
+  }
+
+  function editTask(
+    projectIndex,
+    taskIndex,
+    title,
+    description,
+    priority,
+    dueDate
+  ) {
+    projectList[projectIndex].tasks[taskIndex].title = title;
+    projectList[projectIndex].tasks[taskIndex].description = description;
+    projectList[projectIndex].tasks[taskIndex].priority = priority;
+    projectList[projectIndex].tasks[taskIndex].dueDate = dueDate;
   }
 
   return {
     showList,
-    add,
-    edit,
-    list,
+    createProject,
+    addTask,
+    editTask,
+    projectList,
   };
 }
 
 export const myListController = listController();
 
-export function addTask(e) {
+export function addTask(e, projectIndex) {
   if (e.target && e.target.matches(".addTask")) {
     const title = document.getElementById("title").value;
     const description = document.getElementById("description").value;
@@ -44,14 +77,20 @@ export function addTask(e) {
     };
     const dueDate = document.getElementById("date").value;
 
-    myListController.add(newTask(title, description, priority(), dueDate));
+    myListController.addTask(
+      projectIndex,
+      title,
+      description,
+      priority(),
+      dueDate
+    );
     myListController.showList();
-    sideBarLoad(myListController.list);
+    sideBarLoad();
     return;
   }
 }
 
-export function addEditTask(e) {
+export function addEditTask(e, projectIndex) {
   if (e.target && e.target.matches(".editTask")) {
     const taskIndex = e.target.parentNode.getAttribute("dataIndex");
     console.log(taskIndex);
@@ -68,47 +107,26 @@ export function addEditTask(e) {
     };
     const dueDate = document.getElementById("date").value;
 
-    myListController.edit(taskIndex, title, description, priority(), dueDate);
+    myListController.editTask(
+      projectIndex,
+      taskIndex,
+      title,
+      description,
+      priority(),
+      dueDate
+    );
     myListController.showList();
-    sideBarLoad(myListController.list);
+    sideBarLoad();
     return;
   }
 }
 
-export function newTask(title, description, priority, dueDate) {
+export function newTask(projectIndex, title, description, priority, dueDate) {
   return {
+    projectIndex,
     title,
     description,
     priority,
     dueDate,
   };
 }
-
-/* export function tasks() {
-  let list = [];
-
-  function newTask(title, description, dueDate, priority) {
-    return {
-      title,
-      description,
-      dueDate,
-      priority,
-    };
-
-    return {
-      newTask,
-    };
-  }
-}
-export function createTask() {
-  const title = prompt("Please enter your title");
-  const description = prompt("Please enter your description");
-
-  list.push(newTask(title, description));
-}
-
-return {
-  newTask,
-  createTask,
-};
-*/

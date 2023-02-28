@@ -4,14 +4,19 @@ import { myListController } from "./tasks";
 import lightFormat from "date-fns/lightFormat";
 import parseISO from "date-fns/parseISO";
 
-export function createTask(mode, n) {
+export function createTaskForm(mode, projectIndex) {
   let editMode = false;
-  const taskIndex = n;
+  const currentProj = myListController.projectList[projectIndex];
+  if (projectIndex === undefined) {
+    projectIndex = 0;
+  } else {
+    projectIndex = n;
+  }
+  console.log(projectIndex);
   if (mode === "editMode") {
     editMode = true;
-    console.log(myListController.list[taskIndex], taskIndex);
+    console.log("EDITING", projectIndex);
   }
-  console.log(mode, editMode);
   if (document.querySelector(".form") && !editMode) {
     return;
   }
@@ -19,9 +24,7 @@ export function createTask(mode, n) {
   // create a div element that contains the inputs
   const form = document.createElement("div");
   form.classList.add("form");
-  if (editMode) {
-    form.setAttribute("dataIndex", taskIndex);
-  }
+  form.setAttribute("dataIndex", projectIndex);
 
   // create a label for the title input
   const titleLabel = document.createElement("label");
@@ -40,7 +43,7 @@ export function createTask(mode, n) {
   titleInput.setAttribute("id", "title");
   titleInput.setAttribute("name", "title");
   if (editMode) {
-    titleInput.setAttribute("value", myListController.list[taskIndex].title);
+    titleInput.setAttribute("value", currentProj.tasks.title);
   }
 
   // create a description label for the message textarea
@@ -48,13 +51,13 @@ export function createTask(mode, n) {
   descriptionLabel.setAttribute("for", "description");
   descriptionLabel.textContent = "Description:";
 
+  console.log("checkpoint");
   // create the description textarea
   const descriptionTextarea = document.createElement("textarea");
   descriptionTextarea.setAttribute("id", "description");
   descriptionTextarea.setAttribute("name", "description");
   if (editMode) {
-    descriptionTextarea.textContent +=
-      myListController.list[taskIndex].description;
+    descriptionTextarea.textContent += currentProj.tasks.description;
   }
 
   // create a label for the priority input
@@ -67,11 +70,12 @@ export function createTask(mode, n) {
   priorityInput.setAttribute("id", "priority");
   priorityInput.type = "checkbox";
   if (editMode) {
-    if (myListController.list[taskIndex].priority === "High priority") {
+    if (currentProj.tasks.priority === "High priority") {
       priorityInput.checked = true;
     }
   }
 
+  console.log("checkpoint");
   // create a label for the date input
   const dateLabel = document.createElement("label");
   dateLabel.setAttribute("for", "date");
@@ -83,18 +87,21 @@ export function createTask(mode, n) {
   dateInput.setAttribute("id", "date");
   dateInput.setAttribute("name", "date");
 
+  console.log(myListController.projectList[projectIndex]);
+
+  console.log(currentProj.tasks.title);
+
+  console.log(currentProj.tasks.dueDate);
+
   if (editMode) {
     dateInput.setAttribute(
       "value",
-      lightFormat(
-        parseISO(myListController.list[taskIndex].dueDate),
-        "yyyy-MM-dd"
-      )
+      lightFormat(parseISO(currentProj.tasks.dueDate), "yyyy-MM-dd")
     );
   } else {
     dateInput.setAttribute("value", lightFormat(endOfTomorrow(), "yyyy-MM-dd"));
   }
-
+  console.log("checkpoint");
   // create submit button
   const submitButton = document.createElement("button");
   submitButton.setAttribute("type", "submit");
@@ -102,11 +109,16 @@ export function createTask(mode, n) {
   if (!editMode) {
     submitButton.classList.add("addTask");
     submitButton.textContent = "+ Add Task";
-    submitButton.addEventListener("click", addTask);
+    submitButton.addEventListener("click", (e) => {
+      addTask(e, projectIndex);
+    });
   } else {
     submitButton.classList.add("editTask");
     submitButton.textContent = "Edit task";
-    submitButton.addEventListener("click", addEditTask);
+    submitButton.addEventListener("click", (e) => {
+      console.log("hello");
+      addEditTask(e, projectIndex);
+    });
   }
 
   // create the cancel button

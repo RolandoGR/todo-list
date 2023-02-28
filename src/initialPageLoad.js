@@ -1,7 +1,14 @@
-import { createTask } from "./form";
-import { addTask } from "./tasks";
+import { createTaskForm } from "./form";
+import { loadTasks } from "./loadTasks";
+import { sideBarLoad } from "./sidebar";
+import { addTask, myListController } from "./tasks";
+import { newTaskBtn } from "./newTaskBtn";
 
 export function initialPageLoad() {
+  console.log(
+    myListController.showList(),
+    myListController.projectList[0].name
+  );
   const content = document.getElementById("content");
   content.replaceChildren();
 
@@ -12,14 +19,12 @@ export function initialPageLoad() {
   const sidebar = document.createElement("div");
   sidebar.classList.add("sidebar");
   content.appendChild(sidebar);
+  sideBarLoad();
 
   const innerGrid = document.createElement("div");
   innerGrid.classList.add("innerGrid");
   content.appendChild(innerGrid);
 
-  const newTaskBtn = document.createElement("taskButton");
-  newTaskBtn.classList.add("taskButton");
-  newTaskBtn.textContent += "Create new task";
-  newTaskBtn.addEventListener("click", createTask);
-  innerGrid.appendChild(newTaskBtn);
+  innerGrid.appendChild(newTaskBtn());
+  loadTasks();
 }
