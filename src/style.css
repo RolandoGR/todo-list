@@ -8,11 +8,37 @@ body {
 #content {
   display: grid;
   height: 100%;
-  grid-template: auto 1fr / 2fr 6fr 1fr;
+  grid-template: auto 1fr / 2fr 6fr;
 }
 
 h1 {
   grid-area: 1/1/2/4;
+}
+
+.pop-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style for the pop-up form */
+.pop-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 50px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: none;
 }
 
 .sidebar {
@@ -38,17 +64,32 @@ h1 {
 }
 .innerGrid {
   display: flex;
-  padding: 20px 40px;
-  gap: 15px;
+  padding: 0px 20px;
+  gap: 5px;
   flex-direction: column;
 }
 
+label,
+input {
+  display: flex;
+  align-items: center;
+}
+
+input,
+textarea {
+  border-radius: 10px;
+}
 .form {
-  display: grid;
+  display: flex;
+  height: 50px;
   gap: 5px;
-  grid-template: repeat(auto-fit, minmax(30px, 5fr)) / 1fr 1fr;
   background-color: rgb(57, 48, 83);
-  padding: 5%;
+  padding: 20px 5px;
+}
+
+textarea::-webkit-input-placeholder {
+  font-family: Arial, sans-serif;
+  padding-top: 15px;
 }
 
 .taskButton {
@@ -70,6 +111,11 @@ h1 {
   cursor: pointer;
 }
 
+.taskDiv {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+}
 .addTask,
 .cancelTask,
 .editTask {

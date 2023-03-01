@@ -1,4 +1,6 @@
 import { compareAsc, format } from "date-fns";
+import { createTaskForm } from "./form";
+import { loadTasks } from "./loadTasks";
 import { sideBarLoad } from "./sidebar";
 
 function listController() {
@@ -30,6 +32,8 @@ function listController() {
     const tasks = [];
     projectList.push({ name, tasks });
   }
+
+  function editProject() {}
 
   function addTask(projectIndex, title, description, priority, dueDate) {
     projectList[projectIndex].tasks.push(
@@ -86,6 +90,8 @@ export function addTask(e, projectIndex) {
     );
     myListController.showList();
     sideBarLoad();
+    loadTasks(projectIndex);
+    createTaskForm(projectIndex);
     return;
   }
 }
@@ -121,9 +127,8 @@ export function addEditTask(e, projectIndex) {
   }
 }
 
-export function newTask(projectIndex, title, description, priority, dueDate) {
+export function newTask(title, description, priority, dueDate) {
   return {
-    projectIndex,
     title,
     description,
     priority,

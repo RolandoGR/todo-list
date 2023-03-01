@@ -5,10 +5,6 @@ import { addTask, myListController } from "./tasks";
 import { newTaskBtn } from "./newTaskBtn";
 
 export function initialPageLoad() {
-  console.log(
-    myListController.showList(),
-    myListController.projectList[0].name
-  );
   const content = document.getElementById("content");
   content.replaceChildren();
 
@@ -25,6 +21,6 @@ export function initialPageLoad() {
   innerGrid.classList.add("innerGrid");
   content.appendChild(innerGrid);
 
-  innerGrid.appendChild(newTaskBtn());
+  createTaskForm();
   loadTasks();
 }

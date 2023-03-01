@@ -1,4 +1,4 @@
-import { createTaskForm } from "./form";
+import { createTaskForm, loadForm } from "./form";
 import { loadTasks } from "./loadTasks";
 import { newTaskBtn } from "./newTaskBtn";
 import { projectController } from "./projectController";
@@ -22,7 +22,7 @@ export function sideBarLoad(list) {
       const innerGrid = document.querySelector(".innerGrid");
       innerGrid.innerHTML = "";
       loadTasks(projectIndex);
-      createTaskForm("editMode", projectIndex);
+      createTaskForm(projectIndex, "editMode");
     }
   }
 
@@ -55,13 +55,23 @@ export function sideBarLoad(list) {
     const lastIndex = myListController.projectList.length;
     myListController.createProject(nameProjInput.value);
     sideBarLoad();
+    console.log("Loading", lastIndex);
     loadTasks(lastIndex);
+    createTaskForm(lastIndex);
   });
 
   newProj.appendChild(nameProjLabel);
   newProj.appendChild(nameProjInput);
   newProj.appendChild(addProjBtn);
   sidebar.appendChild(newProj);
+
+  const dashboard = document.createElement("button");
+  dashboard.textContent = "Dashboard";
+  dashboard.addEventListener("click", () => {
+    loadAll();
+  });
+
+  sidebar.appendChild(dashboard);
 
   let i = 0;
   myListController.projectList.forEach((element) => {
@@ -82,7 +92,7 @@ export function sideBarLoad(list) {
         e.target.parentNode.getAttribute("id").substring(5)
       );
       console.log(selectedIndex);
-      newTaskBtn();
+      createTaskForm(selectedIndex);
       loadTasks(selectedIndex);
     });
 

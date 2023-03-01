@@ -3,19 +3,28 @@ import { compareAsc, endOfTomorrow, format } from "date-fns";
 import { myListController } from "./tasks";
 import lightFormat from "date-fns/lightFormat";
 import parseISO from "date-fns/parseISO";
+import { loadTasks } from "./loadTasks";
+import { projectController } from "./projectController";
 
-export function createTaskForm(mode, projectIndex) {
-  let editMode = false;
-  const currentProj = myListController.projectList[projectIndex];
-  if (projectIndex === undefined) {
-    projectIndex = 0;
-  } else {
-    projectIndex = n;
+export function loadForm() {
+  if (document.querySelector(".form")) {
+    document.querySelector(".form").remove();
   }
-  console.log(projectIndex);
+}
+
+export function createTaskForm(projectIndex, mode, taskIndex) {
+  loadForm();
+  console.log(taskIndex);
+  let editMode = false;
+  projectIndex = projectController(projectIndex);
+
+  const currentProj = myListController.projectList[projectIndex];
+
+  console.log("This is mi PI", projectIndex);
   if (mode === "editMode") {
     editMode = true;
-    console.log("EDITING", projectIndex);
+    console.log("EDITING", projectIndex, taskIndex);
+    console.log(currentProj.tasks[taskIndex].title);
   }
   if (document.querySelector(".form") && !editMode) {
     return;
@@ -25,39 +34,47 @@ export function createTaskForm(mode, projectIndex) {
   const form = document.createElement("div");
   form.classList.add("form");
   form.setAttribute("dataIndex", projectIndex);
-
+  if (editMode) {
+    const overlay = document.createElement("div");
+    overlay.classList.add("pop-form-overlay");
+    document.body.appendChild(overlay);
+    form.classList.add("pop-form");
+  }
   // create a label for the title input
   const titleLabel = document.createElement("label");
   titleLabel.setAttribute("for", "title");
   titleLabel.setAttribute("id", "titleLabel");
-
+  /*
   if (!editMode) {
     titleLabel.textContent = "Enter a title:";
   } else {
     titleLabel.textContent = "Title:";
   }
-
+*/
   // create the title input
   const titleInput = document.createElement("input");
   titleInput.setAttribute("type", "text");
   titleInput.setAttribute("id", "title");
   titleInput.setAttribute("name", "title");
+  titleInput.setAttribute("placeholder", "Task title");
   if (editMode) {
-    titleInput.setAttribute("value", currentProj.tasks.title);
+    titleInput.setAttribute("value", currentProj.tasks[taskIndex].title);
   }
 
   // create a description label for the message textarea
   const descriptionLabel = document.createElement("label");
   descriptionLabel.setAttribute("for", "description");
-  descriptionLabel.textContent = "Description:";
 
-  console.log("checkpoint");
+  //descriptionLabel.textContent = "Description:";
+
   // create the description textarea
   const descriptionTextarea = document.createElement("textarea");
   descriptionTextarea.setAttribute("id", "description");
   descriptionTextarea.setAttribute("name", "description");
+  descriptionTextarea.setAttribute("placeholder", "Add a description");
+
   if (editMode) {
-    descriptionTextarea.textContent += currentProj.tasks.description;
+    descriptionTextarea.textContent += currentProj.tasks[taskIndex].description;
   }
 
   // create a label for the priority input
@@ -70,12 +87,11 @@ export function createTaskForm(mode, projectIndex) {
   priorityInput.setAttribute("id", "priority");
   priorityInput.type = "checkbox";
   if (editMode) {
-    if (currentProj.tasks.priority === "High priority") {
+    if (currentProj.tasks[taskIndex].priority === "High priority") {
       priorityInput.checked = true;
     }
   }
 
-  console.log("checkpoint");
   // create a label for the date input
   const dateLabel = document.createElement("label");
   dateLabel.setAttribute("for", "date");
@@ -87,21 +103,14 @@ export function createTaskForm(mode, projectIndex) {
   dateInput.setAttribute("id", "date");
   dateInput.setAttribute("name", "date");
 
-  console.log(myListController.projectList[projectIndex]);
-
-  console.log(currentProj.tasks.title);
-
-  console.log(currentProj.tasks.dueDate);
-
   if (editMode) {
     dateInput.setAttribute(
       "value",
-      lightFormat(parseISO(currentProj.tasks.dueDate), "yyyy-MM-dd")
+      lightFormat(parseISO(currentProj.tasks[taskIndex].dueDate), "yyyy-MM-dd")
     );
   } else {
     dateInput.setAttribute("value", lightFormat(endOfTomorrow(), "yyyy-MM-dd"));
   }
-  console.log("checkpoint");
   // create submit button
   const submitButton = document.createElement("button");
   submitButton.setAttribute("type", "submit");
@@ -111,13 +120,17 @@ export function createTaskForm(mode, projectIndex) {
     submitButton.textContent = "+ Add Task";
     submitButton.addEventListener("click", (e) => {
       addTask(e, projectIndex);
+      loadTasks(projectIndex);
     });
   } else {
     submitButton.classList.add("editTask");
     submitButton.textContent = "Edit task";
     submitButton.addEventListener("click", (e) => {
-      console.log("hello");
       addEditTask(e, projectIndex);
+      loadTasks(projectIndex);
+      document.querySelector(".pop-form-overlay").remove();
+      document.querySelector(".form").remove();
+      createTaskForm();
     });
   }
 
@@ -130,6 +143,12 @@ export function createTaskForm(mode, projectIndex) {
     form.remove();
   });
 
+  cancelButton.addEventListener("click", function () {
+    form.remove();
+    document.querySelector(".pop-form-overlay").remove();
+    createTaskForm();
+  });
+
   // add the form elements to the form
   form.appendChild(titleLabel);
   form.appendChild(titleInput);
@@ -140,8 +159,11 @@ export function createTaskForm(mode, projectIndex) {
   form.appendChild(dateLabel);
   form.appendChild(dateInput);
   form.appendChild(submitButton);
-  form.appendChild(cancelButton);
+  if (editMode) {
+    form.appendChild(cancelButton);
+  }
 
   // add the form to the document body
-  document.querySelector(".innerGrid").appendChild(form);
+  const innerGrid = document.querySelector(".innerGrid");
+  innerGrid.insertBefore(form, innerGrid.firstChild);
 }

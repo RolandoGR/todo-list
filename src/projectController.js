@@ -1,9 +1,13 @@
-export function projectController(selectedIndex) {
-  let currentIndex = selectedIndex === undefined ? 0 : selectedIndex;
+export function projectController(changeToIndex) {
+  let currentIndex = 0;
+
+  if (changeToIndex === undefined) {
+    currentIndex = 0;
+  } else {
+    currentIndex = changeToIndex;
+  }
+
   console.log("Current active index", currentIndex);
 
-  function changeCurrent(newIndex) {
-    currentIndex = newIndex;
-  }
   return currentIndex;
 }
