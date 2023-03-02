@@ -1,5 +1,5 @@
 import { createTaskForm, loadForm } from "./form";
-import { loadTasks } from "./loadTasks";
+import { loadTasks, loadAll } from "./loadTasks";
 import { newTaskBtn } from "./newTaskBtn";
 import { projectController } from "./projectController";
 import { myListController } from "./tasks";
@@ -67,6 +67,7 @@ export function sideBarLoad(list) {
 
   const dashboard = document.createElement("button");
   dashboard.textContent = "Dashboard";
+  dashboard.classList.add("dashboard");
   dashboard.addEventListener("click", () => {
     loadAll();
   });
@@ -78,20 +79,21 @@ export function sideBarLoad(list) {
     // delBtn
     const delBtn = document.createElement("button");
     delBtn.classList.add("sidebarBtn");
+    delBtn.classList.add("delBtn");
+
     delBtn.setAttribute("id", "delBtn");
-    delBtn.textContent = "Del";
     delBtn.addEventListener("click", delTask);
 
     //editBtn
     const editBtn = document.createElement("button");
     editBtn.classList.add("sidebarBtn");
+    editBtn.classList.add("editBtn");
     editBtn.setAttribute("id", "editBtn");
-    editBtn.textContent = "Edit";
     editBtn.addEventListener("click", (e) => {
       const selectedIndex = parseInt(
         e.target.parentNode.getAttribute("id").substring(5)
       );
-      console.log(selectedIndex);
+      console.log("loading task numba:", selectedIndex);
       createTaskForm(selectedIndex);
       loadTasks(selectedIndex);
     });
@@ -100,7 +102,19 @@ export function sideBarLoad(list) {
     const taskDiv = document.createElement("div");
     taskDiv.setAttribute("id", `task-${i}`);
     taskDiv.classList.add("sidebarDiv");
-    taskDiv.textContent = `${element.name}`;
+
+    const projTitle = document.createElement("div");
+    projTitle.classList.add("projTitle");
+    projTitle.textContent = `${element.name}`;
+    taskDiv.appendChild(projTitle);
+
+    const sBtnsDiv = document.createElement("div");
+    sBtnsDiv.classList.add("sBtnsDiv");
+
+    sBtnsDiv.appendChild(editBtn);
+    sBtnsDiv.appendChild(delBtn);
+
+    taskDiv.appendChild(sBtnsDiv);
 
     //append every div
     sidebar.appendChild(taskDiv);

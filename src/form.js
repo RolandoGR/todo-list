@@ -14,7 +14,6 @@ export function loadForm() {
 
 export function createTaskForm(projectIndex, mode, taskIndex) {
   loadForm();
-  console.log(taskIndex);
   let editMode = false;
   projectIndex = projectController(projectIndex);
 

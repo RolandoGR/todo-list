@@ -3,24 +3,57 @@ import { newTaskBtn } from "./newTaskBtn";
 import { projectController } from "./projectController";
 import { myListController } from "./tasks";
 
-export function loadTasks(index) {
-  console.log(myListController.projectList);
-  const projectIndex = projectController(index);
-  if (document.querySelector(".displayTasks")) {
-    document.querySelector(".displayTasks").remove();
+export function loadAll() {
+  const innerGrid = document.querySelector(".innerGrid");
+  innerGrid.innerHTML = "";
+
+  console.log(
+    myListController.projectList.length,
+    myListController.projectList,
+    myListController.projectList[0]
+  );
+  for (let i = 0; i < myListController.projectList.length; i++) {
+    loadTasks("all", i);
+
+    console.log(i + ": " + myListController.projectList[i]);
   }
 
-  const displayTasks = document.createElement("div");
-  displayTasks.classList.add("displayTasks");
+  //dashboard header
+  const dashHeader = document.createElement("h2");
+  dashHeader.textContent += "Dashboard";
+  dashHeader.classList.add("dashHeader");
+  innerGrid.insertBefore(dashHeader, innerGrid.firstChild);
+  console.log(currentIndex);
+}
 
-  const projectTitleDiv = document.createElement("h2");
+export function loadTasks(index, i) {
+  let projectIndex;
+
+  if (index === "all") {
+    projectIndex = i;
+  } else {
+    projectIndex = projectController(index);
+  }
+
+  if (document.querySelector(".displayProj") && index === "all") {
+    // Do nothing
+  } else {
+    while (document.querySelector(".displayProj")) {
+      document.querySelector(".displayProj").remove();
+      console.log("Removed dispayProj");
+    }
+  }
+
+  const displayProj = document.createElement("div");
+  displayProj.classList.add("displayProj");
+
+  const projectTitleDiv = document.createElement("h3");
   projectTitleDiv.textContent = `${myListController.projectList[projectIndex].name}`;
   projectTitleDiv.classList.add("projTitleDisplay");
-  displayTasks.appendChild(projectTitleDiv);
+  displayProj.appendChild(projectTitleDiv);
 
   let taskIndex = 0;
   myListController.projectList[projectIndex].tasks.forEach((element) => {
-    console.log("Stamping", taskIndex);
     const taskDiv = document.createElement("div");
     const taskDivTitle = document.createElement("div");
     const taskDivDesc = document.createElement("div");
@@ -35,8 +68,8 @@ export function loadTasks(index) {
 
     // editBtn
     const editBtnMain = document.createElement("button");
-    editBtnMain.textContent = "EDIT";
     editBtnMain.setAttribute("id", `edit${taskIndex}`);
+    editBtnMain.classList.add("editBtn");
 
     editBtnMain.addEventListener("click", (e) => {
       const selectedTask = e.target.getAttribute("id").substring(4);
@@ -46,7 +79,8 @@ export function loadTasks(index) {
     // delBtn
     const delBtnMain = document.createElement("button");
     delBtnMain.setAttribute("id", `del${taskIndex}`);
-    delBtnMain.textContent = "DEL";
+    delBtnMain.classList.add("delBtn");
+
     delBtnMain.addEventListener("click", (e) => {
       const selectedTask = e.target.getAttribute("id").substring(3);
       console.log(myListController.projectList[projectIndex]);
@@ -64,9 +98,15 @@ export function loadTasks(index) {
 
     taskDiv.classList.add(`taskDiv`);
     taskDiv.classList.add(`${taskIndex}`);
-    displayTasks.appendChild(taskDiv);
+    displayProj.appendChild(taskDiv);
     taskIndex += 1;
   });
   const innerGrid = document.querySelector(".innerGrid");
-  innerGrid.appendChild(displayTasks);
+  innerGrid.appendChild(displayProj);
+
+  //remove dashboard Header in case there's one
+  if (document.querySelector(".dashHeader")) {
+    document.querySelector(".dashHeader").remove();
+    console.log("deleted dashboard header");
+  }
 }
