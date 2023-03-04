@@ -46,6 +46,7 @@ export function loadTasks(index, i) {
 
   const displayProj = document.createElement("div");
   displayProj.classList.add("displayProj");
+  displayProj.setAttribute("id", `dp${projectIndex}`);
 
   const projectTitleDiv = document.createElement("h3");
   projectTitleDiv.textContent = `${myListController.projectList[projectIndex].name}`;

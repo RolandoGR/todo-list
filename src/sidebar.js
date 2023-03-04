@@ -5,13 +5,22 @@ import { projectController } from "./projectController";
 import { myListController } from "./tasks";
 
 export function sideBarLoad(list) {
-  function delTask(e) {
+  function delTask(e, selectedIndex) {
     // remove object from taskList
     if (e.target && e.target.matches("#delBtn")) {
       const taskDiv = e.target.parentNode;
       const projectIndex = parseInt(taskDiv.getAttribute("id").substring(5));
       myListController.projectList.splice(projectIndex, 1);
       sideBarLoad();
+
+      const currentLoaded = parseInt(
+        document.querySelector(".displayProj").getAttribute("id").substring(2)
+      );
+      if ((selectedIndex = currentLoaded)) {
+        loadTasks(selectedIndex - 1);
+        return;
+      }
+      loadTasks(projectIndex);
     }
   }
 
@@ -50,7 +59,6 @@ export function sideBarLoad(list) {
   const addProjBtn = document.createElement("button");
   addProjBtn.classList.add("addProjBtn");
   addProjBtn.setAttribute("id", "addProjBtn");
-  addProjBtn.textContent = "+";
   addProjBtn.addEventListener("click", () => {
     const lastIndex = myListController.projectList.length;
     myListController.createProject(nameProjInput.value);
@@ -82,7 +90,12 @@ export function sideBarLoad(list) {
     delBtn.classList.add("delBtn");
 
     delBtn.setAttribute("id", "delBtn");
-    delBtn.addEventListener("click", delTask);
+    delBtn.addEventListener("click", (e) => {
+      const selectedIndex = parseInt(
+        e.target.parentNode.getAttribute("id").substring(5)
+      );
+      delTask(e, selectedIndex);
+    });
 
     //editBtn
     const editBtn = document.createElement("button");

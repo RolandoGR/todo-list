@@ -71,15 +71,15 @@ h2 {
 }
 
 .delBtn {
-  background-image: url("img/delete.svg");
+  background-image: url("img/deletew.png");
 }
 
 .addProjBtn {
-  background-image: url("img/plus.svg");
+  background-image: url("img/plusw.png");
 }
 
 .editBtn {
-  background-image: url("img/edit.svg");
+  background-image: url("img/editw.png");
 }
 
 .pop-form-overlay {

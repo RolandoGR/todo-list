@@ -4,25 +4,11 @@ import { loadTasks } from "./loadTasks";
 import { sideBarLoad } from "./sidebar";
 
 function listController() {
-  const projectList = [
-    {
-      name: "Project One",
-      tasks: [
-        newTask(
-          "Task 1",
-          "Description of Task 1",
-          "High priority",
-          "2023-03-01"
-        ),
-        newTask(
-          "Task 2",
-          "Description of Task 2",
-          "Standard priority",
-          "2023-03-02"
-        ),
-      ],
-    },
-  ];
+  const projectList = JSON.parse(localStorage.getItem("projectList")) || [];
+
+  function saveData() {
+    localStorage.setItem("projectList", JSON.stringify(projectList));
+  }
 
   function showList() {
     console.log("Here's the project list: ", projectList);
@@ -31,14 +17,14 @@ function listController() {
   function createProject(name) {
     const tasks = [];
     projectList.push({ name, tasks });
+    saveData();
   }
-
-  function editProject() {}
 
   function addTask(projectIndex, title, description, priority, dueDate) {
     projectList[projectIndex].tasks.push(
       newTask(title, description, priority, dueDate)
     );
+    saveData();
   }
 
   function editTask(
@@ -53,6 +39,7 @@ function listController() {
     projectList[projectIndex].tasks[taskIndex].description = description;
     projectList[projectIndex].tasks[taskIndex].priority = priority;
     projectList[projectIndex].tasks[taskIndex].dueDate = dueDate;
+    saveData();
   }
 
   return {
