@@ -1,0 +1,227 @@
+body {
+  height: 100vh;
+  background-color: rgb(24, 18, 43);
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#content {
+  display: grid;
+  height: 100%;
+  grid-template: auto 1fr / 1.5fr 6fr;
+}
+
+h1 {
+  grid-area: 1/1/2/2;
+  display: flex;
+  justify-content: center;
+}
+
+h2 {
+  font-size: 2em;
+}
+.displayProj {
+  background-color: rgb(99, 89, 133);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.dashboard {
+  color: white;
+  font-weight: 500;
+  border-color: rgb(99, 89, 133);
+  padding: 10px;
+  font-size: 1em;
+  background-color: rgb(99, 89, 133);
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+.editBtn:hover,
+.delBtn:hover,
+.addProjBtn:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  opacity: 60%;
+}
+
+#nameProjInput {
+  height: 3vh;
+}
+.dashboard:hover {
+  background-color: rgb(82, 73, 109);
+  cursor: pointer;
+}
+.projTitle {
+  display: flex;
+  margin-right: auto;
+}
+.addProjBtn,
+.editBtn,
+.delBtn {
+  width: 3vh;
+  height: 3vh;
+  background-color: transparent;
+  background-size: cover;
+  border: none;
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+.delBtn {
+  background-image: url("img/deletew.png");
+}
+
+.addProjBtn {
+  background-image: url("img/plusw.png");
+}
+
+.editBtn {
+  background-image: url("img/editw.png");
+}
+
+.pop-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style for the pop-up form */
+.pop-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 50px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+.sidebar {
+  grid-area: 2/1/3/2;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  background-color: rgb(57, 48, 83);
+  border-radius: 30px;
+  gap: 1vh;
+}
+
+.newProj {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2vh;
+}
+
+.sidebarDiv {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 5vh;
+  font-size: 2vh;
+  padding: 0px 10%;
+  border-top: 5px solid rgb(99, 89, 133);
+}
+.innerGrid {
+  grid-area: 2/2/3/3;
+
+  display: flex;
+  padding: 0px 20px;
+  gap: 5px;
+  flex-direction: column;
+}
+
+label,
+input {
+  display: flex;
+  align-items: center;
+}
+
+input,
+textarea {
+  border-radius: 5px;
+}
+.form {
+  display: flex;
+  height: 50px;
+  gap: 5px;
+  background-color: rgb(57, 48, 83);
+  border-radius: 5px;
+  gap: 15px;
+  padding: 20px 5px;
+}
+
+textarea::-webkit-input-placeholder {
+  font-family: Arial, sans-serif;
+  padding-top: 15px;
+}
+
+.taskButton {
+  display: flex;
+  background-color: rgb(99, 89, 133);
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 15px;
+  border-style: none;
+  font-family: Arial, Helvetica, sans-serif;
+  transition: 0.5s;
+}
+
+.taskButton:hover {
+  background-color: rgb(57, 48, 83);
+  cursor: pointer;
+}
+
+.taskDiv {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  align-items: center;
+}
+.addTask,
+.cancelTask,
+.editTask {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  border-style: none;
+  transition: 0.5s;
+}
+
+.addTask,
+.editTask {
+  background-color: #3c9e61;
+}
+
+.cancelTask {
+  background-color: rgb(243, 14, 14);
+}
+
+.cancelTask:hover {
+  background-color: rgb(160, 1, 1);
+  cursor: pointer;
+}
+.addTask:hover,
+.editTask:hover {
+  background-color: #318351;
+  cursor: pointer;
+}
